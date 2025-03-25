@@ -6,7 +6,8 @@ import {
   Inbox,
   User,
   Login,
-  Signup
+  Signup,
+  NotFound
 } from './pages';
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
       <Route path="/problems/:problemId" element={<Problem />} />
       <Route path="/inbox" element={<Inbox />} />
       <Route path="/user" element={<User />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
