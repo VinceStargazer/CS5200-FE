@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FormContainer } from '../components';
+import { useAuth } from '../utils/hooks';
 
 const inputStyle = 'w-96 px-3 py-1 outline outline-1 outline-gray-300 rounded';
 
@@ -9,11 +10,18 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
+  const { authInfo } = useAuth();
+  const { isLoggedIn } = authInfo;
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // todo
   };
+
+  // useEffect(() => {
+  //   if (isLoggedIn) navigate('/');
+  // }, [isLoggedIn, navigate]);
 
   return (
     <FormContainer onSubmit={handleSubmit}>

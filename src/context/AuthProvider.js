@@ -1,10 +1,11 @@
 import { createContext, useState } from 'react';
+import user from '../data/user';
 
 export const AuthContext = createContext();
 
 const defaultAuthInfo = {
-  profile: null,
-  isLoggedIn: false,
+  profile: user,
+  isLoggedIn: true,
   isPending: false,
   error: '',
 };
