@@ -1,9 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormContainer } from '../components';
-import { useAuth } from '../utils/hooks';
+import { useAuth, useNotification } from '../utils/hooks';
+import { isValidEmail } from '../utils/helpers';
+import { createUser } from '../api/auth';
 
 const inputStyle = 'w-96 px-3 py-1 outline outline-1 outline-gray-300 rounded';
+
+const validateUser = (name, email, password, confirmedPassword) => {
+  const nameRegex = /^[a-z A-Z]+$/;
+  if (!name.trim()) return { ok: false, error: 'Name is missing!' };
+  if (!nameRegex.test(name)) return { ok: false, error: 'Invalid name!' };
+  if (!email.trim()) return { ok: false, error: 'Email is missing!' };
+  if (!isValidEmail(email)) return { ok: false, error: 'Invalid email!' };
+  if (!password.trim()) return { ok: false, error: 'Password is missing!' };
+  if (password.length < 8)
+    return { ok: false, error: 'Password must be at least 8 characters!' };
+  if (password !== confirmedPassword)
+    return { ok: false, error: "Passwords don't match!" };
+  return { ok: true };
+};
 
 export default function Signup() {
   const [username, setUsername] = useState('');
@@ -13,22 +29,38 @@ export default function Signup() {
   const { authInfo } = useAuth();
   const { isLoggedIn } = authInfo;
   const navigate = useNavigate();
+  const { updateNotification } = useNotification();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // todo
+    const { ok, error } = validateUser(
+      username,
+      email,
+      password,
+      confirmedPassword
+    );
+    if (!ok) return updateNotification('error', error);
+    const { error: err, user } = await createUser(
+      username,
+      email,
+      password,
+      confirmedPassword
+    );
+    if (err) return updateNotification('error', err);
+    navigate('/', { state: { user }, replace: true });
   };
 
-  // useEffect(() => {
-  //   if (isLoggedIn) navigate('/');
-  // }, [isLoggedIn, navigate]);
+  useEffect(() => {
+    if (isLoggedIn) navigate('/');
+  }, [isLoggedIn, navigate]);
 
   return (
     <FormContainer onSubmit={handleSubmit}>
       <input
         className={inputStyle}
         type="text"
-        placeholder="Username"
+        placeholder="Name"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />

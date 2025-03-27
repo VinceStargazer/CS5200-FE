@@ -3,7 +3,7 @@ import { Container, Navbar } from '../components';
 import notifications from '../data/notifications';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/hooks';
-import trim from '../utils/helpers';
+import { trim } from '../utils/helpers';
 
 export default function Inbox() {
   const { authInfo } = useAuth();

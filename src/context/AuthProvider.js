@@ -1,11 +1,10 @@
 import { createContext, useState } from 'react';
-import user from '../data/user';
 
 export const AuthContext = createContext();
 
 const defaultAuthInfo = {
-  profile: user,
-  isLoggedIn: true,
+  profile: null,
+  isLoggedIn: false,
   isPending: false,
   error: '',
 };
@@ -13,7 +12,9 @@ const defaultAuthInfo = {
 export default function AuthProvider({ children }) {
   const [authInfo, setAuthInfo] = useState({ ...defaultAuthInfo });
 
-  const handleLogin = async (email, password) => {};
+  const handleLogin = async (email, password) => {
+    
+  };
 
   const handleLogout = async () => {}
 
