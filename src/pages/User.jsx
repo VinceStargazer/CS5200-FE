@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Container, Navbar } from '../components';
-import { useAuth } from '../utils/hooks';
+import { Navbar } from '../components';
+import { useAuth, useNotification } from '../utils/hooks';
 import { useNavigate } from 'react-router-dom';
 
 const buttonStyles = 'w-64 text-white px-3 py-1 rounded transition';
@@ -10,6 +10,7 @@ export default function User() {
   const { profile, isLoggedIn } = authInfo;
   const [newProfile, setNewProfile] = useState({ ...profile });
   const navigate = useNavigate();
+  const { updateNotification } = useNotification();
 
   const handleProfileChange = (e) => {
     e.preventDefault();
@@ -17,7 +18,7 @@ export default function User() {
 
   const handleUserLogout = async () => {
     await handleLogout();
-    navigate('/');
+    updateNotification('success', 'You are now logged out');
   };
 
   useEffect(() => {

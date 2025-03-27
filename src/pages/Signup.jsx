@@ -26,14 +26,13 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmedPassword, setConfirmedPassword] = useState('');
-  const { authInfo } = useAuth();
+  const { authInfo, handleLogin } = useAuth();
   const { isLoggedIn } = authInfo;
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // todo
     const { ok, error } = validateUser(
       username,
       email,
@@ -41,14 +40,17 @@ export default function Signup() {
       confirmedPassword
     );
     if (!ok) return updateNotification('error', error);
-    const { error: err, user } = await createUser(
+    const { error: err, data } = await createUser(
       username,
       email,
       password,
       confirmedPassword
     );
-    if (err) return updateNotification('error', err);
-    navigate('/', { state: { user }, replace: true });
+
+    if (err) return updateNotification('error', JSON.stringify(err));
+    updateNotification('success', 'Signup success');
+    await handleLogin(email, password);
+    navigate('/', { state: { data }, replace: true });
   };
 
   useEffect(() => {
