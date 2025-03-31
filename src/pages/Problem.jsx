@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import sqlProblems from '../data/sqlProblems';
 import { Navbar } from '../components';
 import { IoBulbOutline } from 'react-icons/io5';
+import CommentsSection from '../components/CommentsSection';
 
 export default function Problem() {
   const { problemId } = useParams();
@@ -44,6 +45,7 @@ export default function Problem() {
             <IoBulbOutline />
             Ask for hint
           </button>
+          {problem.id && <CommentsSection problemId={problem.id} />}
         </Section>
         <Section className="ml-1 mr-2">
           <textarea
