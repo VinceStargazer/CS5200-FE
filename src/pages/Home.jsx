@@ -2,18 +2,24 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar, Container } from '../components';
 import sqlProblems from '../data/sqlProblems';
+import { getAllProblems } from '../api/problem';
+import { useNotification } from '../utils/hooks';
 
 export default function Home() {
   const [problems, setProblems] = useState(sqlProblems);
   const navigate = useNavigate();
+  const { updateNotification } = useNotification();
 
   useEffect(() => {
     const fetchProblems = async () => {
       // todo
+      const { data, error } = await getAllProblems()
+      if (error) return updateNotification('error', JSON.stringify(error));
+      setProblems([...data])
     };
 
     fetchProblems();
-  }, []);
+  }, [updateNotification]);
 
   return (
     <>
@@ -31,17 +37,17 @@ export default function Home() {
           </thead>
           <tbody>
             {problems.map(
-              ({ id, title, topic_id, difficulty_level }, index) => (
+              ({ problem_id, title, topic, difficulty_level }, index) => (
                 <tr
-                  key={id}
+                  key={problem_id}
                   className={
                     (index % 2 === 0 ? 'bg-slate-100' : '') + ' cursor-pointer'
                   }
-                  onClick={() => navigate(`/problems/${id}`)}
+                  onClick={() => navigate(`/problems/${problem_id}`)}
                 >
-                  <td className="p-2 rounded">{id}</td>
+                  <td className="p-2 rounded">{problem_id}</td>
                   <td className="hover:text-blue-400 transition">{title}</td>
-                  <td>{topic_id}</td>
+                  <td>{topic}</td>
                   <td>100%</td>
                   <td
                     className={
