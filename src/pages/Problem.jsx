@@ -1,57 +1,117 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import sqlProblems from '../data/sqlProblems';
-import { Navbar } from '../components';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  useNavigate,
+  useParams
+} from 'react-router-dom';
+import { Loading, Navbar, CommentsSection } from '../components';
 import { IoBulbOutline } from 'react-icons/io5';
-import CommentsSection from '../components/CommentsSection';
+import { getSingleProblem } from '../api/problem';
+import { useNotification } from '../utils/hooks';
+import { debounce } from 'lodash';
+
+const labelStyles = ' text-xs w-fit bg-slate-100 px-2 py-1 rounded-full';
+const tdStyles = 'text-sm border border-dashed border-slate-300 px-2 py-1';
 
 export default function Problem() {
   const { problemId } = useParams();
+  const [ready, setReady] = useState(false);
   const [problem, setProblem] = useState({});
+  const [hintsUsed, setHintsUsed] = useState(0);
   const [solution, setSolution] = useState('');
   const navigate = useNavigate();
+  const { updateNotification } = useNotification();
+
+  const handleChange = ({ target }) => {
+    setSolution(target.value);
+    debouncedSave(target.value);
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedSave = useCallback(
+    debounce((newSolution) => {
+      localStorage.setItem("p" + problemId, newSolution);
+    }, 500),
+    [problemId]
+  );
 
   useEffect(() => {
-    const filtered = sqlProblems.filter(({ id }) => id === parseInt(problemId));
-    if (!filtered.length) {
-      navigate('/');
-      return;
-    }
-    setProblem(filtered[0]);
-  }, [navigate, problemId]);
+    return () => debouncedSave.cancel();
+  }, [debouncedSave]);
 
-  const { title, description, difficulty_level } = problem;
+  useEffect(() => {
+    const prevSolution = localStorage.getItem('p' + problemId);
+    if (prevSolution) setSolution(prevSolution);
+  }, [problemId]);
+
+  useEffect(() => {
+    const fetchCurrentProblem = async () => {
+      const { data, error } = await getSingleProblem(problemId);
+      if (error) {
+        updateNotification('error', JSON.stringify(error));
+        navigate('/');
+      }
+      setReady(true);
+      setProblem({ ...data });
+    };
+    fetchCurrentProblem();
+  }, [navigate, problemId, updateNotification]);
+
+  const { title, topic, description, difficulty_level, tables } = problem;
 
   return (
     <div className="h-screen bg-slate-200 flex flex-col">
-      <Navbar isProblem={true} solution={solution} />
+      <Navbar
+        isProblem={true}
+        problemId={problemId}
+        solution={solution}
+        hintsUsed={hintsUsed}
+      />
       <div className="flex flex-grow">
         <Section className="ml-2 mr-1">
-          <h1 className="text-2xl font-semibold">{problemId + '. ' + title}</h1>
-          <label
-            className={
-              (difficulty_level === 'Easy'
-                ? 'text-green-500'
-                : difficulty_level === 'Medium'
-                ? 'text-yellow-500'
-                : 'text-red-500') +
-              ' text-xs w-fit bg-slate-100 px-2 py-1 rounded-full'
-            }
-          >
-            {difficulty_level}
-          </label>
-          <p>{description}</p>
-          <button className="w-fit text-sm flex items-center gap-1 px-2 rounded bg-slate-100 hover:text-green-600 transition">
-            <IoBulbOutline />
-            Ask for hint
-          </button>
-          {problem.id && <CommentsSection problemId={problem.id} />}
+          {!ready ? (
+            <Loading />
+          ) : (
+            <>
+              <h1 className="text-2xl font-semibold">
+                {problemId + '. ' + title}
+              </h1>
+              <div className="flex gap-3">
+                <label
+                  title="difficulty level"
+                  className={
+                    (difficulty_level === 'Easy'
+                      ? 'text-green-500'
+                      : difficulty_level === 'Medium'
+                      ? 'text-yellow-500'
+                      : 'text-red-500') + labelStyles
+                  }
+                >
+                  {difficulty_level}
+                </label>
+                <label title="topic" className={'text-slate-800' + labelStyles}>
+                  {topic}
+                </label>
+              </div>
+              <p>{description}</p>
+              {tables.map((table) => (
+                <TableSection table={table} />
+              ))}
+              <button
+                className="w-fit text-sm flex items-center gap-1 px-2 rounded bg-slate-100 hover:text-green-600 transition"
+                onClick={() => setHintsUsed(hintsUsed + 1)}
+              >
+                <IoBulbOutline />
+                Ask for hint
+              </button>
+              <CommentsSection problemId={problemId} />
+            </>
+          )}
         </Section>
         <Section className="ml-1 mr-2">
           <textarea
             className="flex-1 focus:outline-none"
             placeholder="Type something..."
-            onChange={({ target }) => setSolution(target.value)}
+            onChange={handleChange}
             value={solution}
           />
         </Section>
@@ -68,6 +128,32 @@ const Section = ({ children, className }) => {
       }
     >
       {children}
+    </div>
+  );
+};
+
+const TableSection = ({ table }) => {
+  const { table_name, columns } = table;
+  return (
+    <div className="flex flex-col gap-2" key={table_name}>
+      <div className="flex gap-2">
+        <span>Table:</span>
+        <span className="font-semibold">{table_name}</span>
+      </div>
+      <table className="text-left">
+        <tr>
+          <th className={tdStyles}>Column Name</th>
+          <th className={tdStyles}>Type</th>
+          <th className={tdStyles}>Description</th>
+        </tr>
+        {columns.map(({ name, type, description }) => (
+          <tr key={name}>
+            <td className={tdStyles}>{name}</td>
+            <td className={tdStyles}>{type}</td>
+            <td className={tdStyles}>{description}</td>
+          </tr>
+        ))}
+      </table>
     </div>
   );
 };

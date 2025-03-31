@@ -29,8 +29,12 @@ export default function AuthProvider({ children }) {
       profile: { ...data },
       isLoggedIn: true,
       isPending: false,
-      error: ""
+      error: '',
     });
+
+    const { access, refresh } = data;
+    localStorage.setItem('access-token', access);
+    localStorage.setItem('refresh-token', refresh);
   };
 
   const handleLogout = async () => {
@@ -38,7 +42,7 @@ export default function AuthProvider({ children }) {
   };
 
   const isAuth = async () => {
-    const token = localStorage.getItem('auth-token');
+    const token = localStorage.getItem('access-token');
     if (!token) return;
   };
 
