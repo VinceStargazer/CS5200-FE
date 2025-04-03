@@ -3,12 +3,11 @@ import {
   useNavigate,
   useParams
 } from 'react-router-dom';
-import { Loading, Navbar, CommentsSection } from '../components';
+import { Loading, Navbar, CommentsSection, HintDialog } from '../components';
 import { IoBulbOutline } from 'react-icons/io5';
 import { getSingleProblem } from '../api/problem';
 import { useNotification } from '../utils/hooks';
 import { debounce } from 'lodash';
-import HintDialog from "../components/HintDialog";
 
 const labelStyles = ' text-xs w-fit bg-slate-100 px-2 py-1 rounded-full';
 const tdStyles = 'text-sm border border-dashed border-slate-300 px-2 py-1';

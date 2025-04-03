@@ -3,3 +3,4 @@ export { default as Container } from "./Container";
 export { default as FormContainer } from "./FormContainer";
 export { default as CommentsSection } from "./CommentsSection";
 export { default as Loading } from "./Loading";
+export { default as HintDialog } from "./HintDialog";
