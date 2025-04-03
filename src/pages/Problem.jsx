@@ -1,15 +1,19 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import sqlProblems from '../data/sqlProblems';
 import { Navbar } from '../components';
 import { IoBulbOutline } from 'react-icons/io5';
 import CommentsSection from '../components/CommentsSection';
+import HintDialog from "../components/HintDialog";
 
 export default function Problem() {
   const { problemId } = useParams();
   const [problem, setProblem] = useState({});
   const [solution, setSolution] = useState('');
   const navigate = useNavigate();
+  const [showDialog, setShowDialog] = useState(false);
+  const [promptText, setPromptText] = useState('');
+  const descriptionRef = useRef();
 
   useEffect(() => {
     const filtered = sqlProblems.filter(({ id }) => id === parseInt(problemId));
@@ -21,6 +25,11 @@ export default function Problem() {
   }, [navigate, problemId]);
 
   const { title, description, difficulty_level } = problem;
+  const handleAskHint = () => {
+    const text = descriptionRef.current?.innerText || '';
+    setPromptText(text);
+    setShowDialog(true);
+  };
 
   return (
     <div className="h-screen bg-slate-200 flex flex-col">
@@ -40,14 +49,19 @@ export default function Problem() {
           >
             {difficulty_level}
           </label>
+
           <p>{description}</p>
-          <button className="w-fit text-sm flex items-center gap-1 px-2 rounded bg-slate-100 hover:text-green-600 transition">
+          <button
+              onClick={handleAskHint}
+              className="w-fit text-sm flex items-center gap-1 px-2 rounded bg-slate-100 hover:text-green-600 transition">
             <IoBulbOutline />
             Ask for hint
           </button>
           {problem.id && <CommentsSection problemId={problem.id} />}
-        </Section>
-        <Section className="ml-1 mr-2">
+
+      </Section>
+
+      <Section className="ml-1 mr-2">
           <textarea
             className="flex-1 focus:outline-none"
             placeholder="Type something..."
@@ -56,6 +70,12 @@ export default function Problem() {
           />
         </Section>
       </div>
+      {showDialog && (
+          <HintDialog
+              prompt={promptText}
+              onClose={() => setShowDialog(false)}
+          />
+      )}
     </div>
   );
 }
@@ -70,4 +90,4 @@ const Section = ({ children, className }) => {
       {children}
     </div>
   );
-};
+}
