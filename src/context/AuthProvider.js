@@ -5,7 +5,7 @@ import { useNotification } from '../utils/hooks';
 export const AuthContext = createContext();
 
 const defaultAuthInfo = {
-  profile: null,
+  profile: {},
   isLoggedIn: false,
   isPending: false,
   error: '',
@@ -41,6 +41,14 @@ export default function AuthProvider({ children }) {
     setAuthInfo({ ...defaultAuthInfo });
   };
 
+  const handleProfileUpdate = (name, password, profile_info) => {
+    const { profile } = authInfo;
+    profile.name = name;
+    profile.password = password;
+    profile.profile_info = profile_info;
+    setAuthInfo({ ...authInfo, profile });
+  };
+
   const isAuth = async () => {
     const token = localStorage.getItem('access-token');
     if (!token) return;
@@ -48,7 +56,13 @@ export default function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ authInfo, handleLogin, handleLogout, isAuth }}
+      value={{
+        authInfo,
+        handleLogin,
+        handleLogout,
+        handleProfileUpdate,
+        isAuth,
+      }}
     >
       {children}
     </AuthContext.Provider>
