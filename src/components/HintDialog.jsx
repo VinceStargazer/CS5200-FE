@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNotification } from '../utils/hooks';
 
 export default function HintDialog({ onClose, prompt }) {
   const [activeTab, setActiveTab] = useState('hints');
@@ -7,6 +8,7 @@ export default function HintDialog({ onClose, prompt }) {
   const [questionStep, setQuestionStep] = useState(0);
   const [questionResponses, setQuestionResponses] = useState([]);
   const [questionInput, setQuestionInput] = useState('');
+  const { updateNotification } = useNotification();
 
   const maxSteps = 3;
   const access_token = localStorage.getItem('access-token');
@@ -26,7 +28,10 @@ export default function HintDialog({ onClose, prompt }) {
       setHintResponses((prev) => [...prev, data.hint]);
       setHintStep((prev) => prev + 1);
     } catch (err) {
-      console.error('Hint request failed', err);
+      updateNotification(
+        'error',
+        `Hint request failed: ${JSON.stringify(err)}`
+      );
     }
   };
 
@@ -49,7 +54,10 @@ export default function HintDialog({ onClose, prompt }) {
       setQuestionInput('');
       setQuestionStep((prev) => prev + 1);
     } catch (err) {
-      console.error('Question request failed', err);
+      updateNotification(
+        'error',
+        `Question request failed: ${JSON.stringify(err)}`
+      );
     }
   };
 
