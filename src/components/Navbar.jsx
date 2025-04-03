@@ -1,18 +1,25 @@
 import { useRef, useState } from 'react';
 import { FaRegCircleUser } from 'react-icons/fa6';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   IoTimerOutline,
   IoPauseCircleOutline,
   IoPlayCircleOutline,
 } from 'react-icons/io5';
 import { FaSpinner } from 'react-icons/fa6';
-import { useAuth } from '../utils/hooks';
+import { useAuth, useNotification } from '../utils/hooks';
+import { submitProblemAttempt } from '../api/problem';
 
 const buttonSelected = 'text-white font-semibold';
 const buttonUnselected = 'text-slate-200 hover:text-white transition';
 
-export default function Navbar({ isProblem, solution, selected = -1 }) {
+export default function Navbar({
+  isProblem,
+  problemId,
+  solution,
+  selected = -1,
+  hintsUsed = 0,
+}) {
   const [timerOn, setTimerOn] = useState(false);
   const [paused, setPaused] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -20,6 +27,8 @@ export default function Navbar({ isProblem, solution, selected = -1 }) {
   const intervalId = useRef(null);
   const { authInfo } = useAuth();
   const { isLoggedIn } = authInfo;
+  const { updateNotification } = useNotification();
+  const navigate = useNavigate();
 
   const handleStartTimer = () => {
     setTimerOn(true);
@@ -40,14 +49,29 @@ export default function Navbar({ isProblem, solution, selected = -1 }) {
     }, 1000);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      updateNotification('warning', 'You are not logged in!');
+      navigate('/login');
+      return;
+    }
     handlePauseTimer();
     setSubmitLoading(true);
-    setTimeout(() => {
-      console.log(solution);
-      setSubmitLoading(false);
-    }, 1000);
+    const { data, error } = await submitProblemAttempt(
+      problemId,
+      solution,
+      hintsUsed,
+      timeElapsed
+    );
+    setSubmitLoading(false);
+    if (error) return updateNotification('error', JSON.stringify(error));
+    const { result, feedback } = data;
+    if (result === 'wrong') {
+      updateNotification('error', feedback);
+    } else {
+      updateNotification('success', 'You have passed this problem!');
+    }
   };
 
   const hours = Math.floor(timeElapsed / 3600);
@@ -93,14 +117,13 @@ export default function Navbar({ isProblem, solution, selected = -1 }) {
             <span>{`${hours.toString().padStart(2, '0')}:${minutes
               .toString()
               .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}</span>
-              <div className='w-40'>
-                {submitLoading ? (
-              <FaSpinner className="animate-spin" size={24} />
-            ) : (
-              <NavbarButton type="submit">Submit</NavbarButton>
-            )}
-              </div>
-            
+            <div className="w-40">
+              {submitLoading ? (
+                <FaSpinner className="animate-spin" size={24} />
+              ) : (
+                <NavbarButton type="submit">Submit</NavbarButton>
+              )}
+            </div>
           </div>
         )}
         <Link to={isLoggedIn ? '/user' : '/login'}>
