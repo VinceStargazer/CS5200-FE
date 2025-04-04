@@ -31,10 +31,10 @@ export const validateUser = (name, email, password, confirmedPassword) => {
 };
 
 export const generatePromptFromProblem = (problem, hintResponses, hintStep) => {
-  const { description, topic, tables } = problem;
+  const { description, topic, tables, expected_output } = problem;
   let prompt = `The current problem is: ${description}. The table format is: ${JSON.stringify(
     tables
-  )}. The topic is: ${topic}. `;
+  )}. The topic is: ${topic}. The expected output is: ${expected_output}`;
   prompt += `Here are previous hints: ${JSON.stringify(hintResponses)}. `;
   if (hintStep < 2)
     prompt +=
