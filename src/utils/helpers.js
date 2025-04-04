@@ -32,13 +32,34 @@ export const validateUser = (name, email, password, confirmedPassword) => {
 
 export const generatePromptFromProblem = (problem, hintResponses, hintStep) => {
   const { description, topic, tables, expected_output } = problem;
-  let prompt = `The current problem is: ${description}. The table format is: ${JSON.stringify(
-    tables
-  )}. The topic is: ${topic}. The expected output is: ${expected_output}`;
-  prompt += `Here are previous hints: ${JSON.stringify(hintResponses)}. `;
-  if (hintStep < 2)
-    prompt +=
-      'Now give your next hint. Try not to repeat. Build your next hint upon them. Limit your answer within 30 words';
-  else prompt += 'Now give your MySQL solution to this problem. Only reply with the solution';
-  return prompt;
+
+  let prompt = `
+    You are solving a SQL problem. Here is the information:
+
+    Problem:
+    ${description}
+
+    Topic:
+    ${topic}
+
+    Table format:
+    ${JSON.stringify(tables, null, 2)}
+
+    Expected Output:
+    ${expected_output}
+
+    Previous Hints:
+    ${JSON.stringify(hintResponses, null, 2)}
+
+  `;
+
+  if (hintStep === 0) {
+    prompt += `Now give your first hint. Focus on which SQL clauses (e.g., SELECT, JOIN, GROUP BY) the user should consider. Limit your answer to 30 words.`;
+  } else if (hintStep === 1) {
+    prompt += `Now give your next hint. Do not repeat earlier hints. Build upon them. Limit your answer to 30 words.`;
+  } else {
+    prompt += `Now provide the complete MySQL solution. Only reply with the SQL code.`;
+  }
+
+  return prompt.trim();
 };
