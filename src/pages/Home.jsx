@@ -37,7 +37,7 @@ export default function Home() {
           </thead>
           <tbody>
             {problems.map(
-              ({ problem_id, title, topic, difficulty_level }, index) => (
+              ({ problem_id, title, topic, difficulty_level, acceptance }, index) => (
                 <tr
                   key={problem_id}
                   className={
@@ -48,7 +48,7 @@ export default function Home() {
                   <td className="p-2 rounded">{problem_id}</td>
                   <td className="hover:text-blue-400 transition">{title}</td>
                   <td>{topic}</td>
-                  <td>100%</td>
+                  <td>{Math.round(acceptance) + '%'}</td>
                   <td
                     className={
                       difficulty_level === 'Easy'

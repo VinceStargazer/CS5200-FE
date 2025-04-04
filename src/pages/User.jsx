@@ -6,19 +6,21 @@ import { updateUser } from '../api/auth';
 import { validateUser } from '../utils/helpers';
 import { FaSpinner } from 'react-icons/fa6';
 
-const buttonStyles = 'w-64 text-white px-3 py-1 rounded transition flex justify-center';
+const buttonStyles =
+  'w-64 text-white px-3 py-1 rounded transition flex justify-center';
 
 export default function User() {
   const { authInfo, handleLogout, handleProfileUpdate } = useAuth();
   const { profile, isLoggedIn } = authInfo;
-  const [pending, setPending] = useState(false);
-  const [newProfile, setNewProfile] = useState({
+  const prevProfile = {
     email: profile.email,
     name: profile.name,
     profile_info: profile.profile_info || '',
     password: '',
     verify_password: '',
-  });
+  };
+  const [pending, setPending] = useState(false);
+  const [newProfile, setNewProfile] = useState({ ...prevProfile });
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
 
@@ -102,7 +104,7 @@ export default function User() {
               buttonStyles +
               ' bg-green-500  disabled:bg-green-300 hover:bg-green-600'
             }
-            disabled={JSON.stringify(profile) === JSON.stringify(newProfile)}
+            disabled={JSON.stringify(prevProfile) === JSON.stringify(newProfile)}
           >
             {!pending ? (
               <span>Submit Change</span>

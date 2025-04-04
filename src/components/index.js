@@ -1,6 +1,9 @@
-export { default as Navbar } from "./Navbar";
-export { default as Container } from "./Container";
-export { default as FormContainer } from "./FormContainer";
-export { default as CommentsSection } from "./CommentsSection";
-export { default as Loading } from "./Loading";
-export { default as HintDialog } from "./HintDialog";
+export { default as Navbar } from './Navbar';
+export { default as Container } from './Container';
+export { default as FormContainer } from './FormContainer';
+export { default as CommentsSection } from './CommentsSection';
+export { default as Loading } from './Loading';
+export { default as HintDialog } from './HintDialog';
+export { default as TabBar } from './TabBar';
+export { default as DescriptionSection } from './DescriptionSection';
+export { default as AttemptsSection } from './AttemptsSection';

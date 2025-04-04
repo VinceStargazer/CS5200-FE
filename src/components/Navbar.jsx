@@ -18,7 +18,7 @@ export default function Navbar({
   problemId,
   solution,
   selected = -1,
-  hintsUsed = 0,
+  hintsStep = 0,
 }) {
   const [timerOn, setTimerOn] = useState(false);
   const [paused, setPaused] = useState(false);
@@ -61,7 +61,7 @@ export default function Navbar({
     const { data, error } = await submitProblemAttempt(
       problemId,
       solution,
-      hintsUsed,
+      hintsStep,
       timeElapsed
     );
     setSubmitLoading(false);

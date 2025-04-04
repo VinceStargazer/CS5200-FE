@@ -44,3 +44,33 @@ export const submitProblemAttempt = async (
     return { error: error.message || error };
   }
 };
+
+export const getAttemptHistory = async (problem_id) => {
+  try {
+    const { data } = await client.get('/problems/' + problem_id + '/history/', {
+      headers: getHeaders(),
+    });
+    return { data };
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return { error: response.data };
+    return { error: error.message || error };
+  }
+};
+
+export const getHint = async (prompt) => {
+  try {
+    const { data } = await client.post(
+      '/llm/hint/',
+      { prompt },
+      {
+        headers: getHeaders(),
+      }
+    );
+    return { data };
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return { error: response.data };
+    return { error: error.message || error };
+  }
+};

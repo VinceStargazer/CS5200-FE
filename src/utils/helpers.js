@@ -1,7 +1,7 @@
 export const trim = (string, limit = 100) => {
   if (string.length <= limit) return string;
   return string.substring(0, limit) + '...';
-}
+};
 
 export const isValidEmail = (email) => {
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
@@ -9,12 +9,12 @@ export const isValidEmail = (email) => {
 };
 
 export const getHeaders = () => {
-  const token = localStorage.getItem("access-token");
+  const token = localStorage.getItem('access-token');
   return {
-    authorization: "Bearer " + token,
-    "content-type": "application/json",
-  }
-}
+    authorization: 'Bearer ' + token,
+    'content-type': 'application/json',
+  };
+};
 
 export const validateUser = (name, email, password, confirmedPassword) => {
   const nameRegex = /^[a-z A-Z]+$/;
@@ -28,4 +28,17 @@ export const validateUser = (name, email, password, confirmedPassword) => {
   if (password !== confirmedPassword)
     return { ok: false, error: "Passwords don't match!" };
   return { ok: true };
+};
+
+export const generatePromptFromProblem = (problem, hintResponses, hintStep) => {
+  const { description, topic, tables } = problem;
+  let prompt = `The current problem is: ${description}. The table format is: ${JSON.stringify(
+    tables
+  )}. The topic is: ${topic}. `;
+  prompt += `Here are previous hints: ${JSON.stringify(hintResponses)}. `;
+  if (hintStep < 2)
+    prompt +=
+      'Now give your next hint. Try not to repeat. Build your next hint upon them. Limit your answer within 30 words';
+  else prompt += 'Now give your MySQL solution to this problem. Only reply with the solution';
+  return prompt;
 };
