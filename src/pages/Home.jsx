@@ -48,7 +48,7 @@ export default function Home() {
                   <td className="p-2 rounded">{problem_id}</td>
                   <td className="hover:text-blue-400 transition">{title}</td>
                   <td>{topic}</td>
-                  <td>{Math.round(acceptance) + '%'}</td>
+                  <td>{Math.round(acceptance * 10) / 10 + '%'}</td>
                   <td
                     className={
                       difficulty_level === 'Easy'

@@ -9,6 +9,7 @@ export default function DescriptionSection({ problem }) {
     description,
     difficulty_level,
     topic,
+    acceptance,
     tables,
     input_data = {},
     expected_output = [],
@@ -33,6 +34,9 @@ export default function DescriptionSection({ problem }) {
         </label>
         <label title="topic" className={'text-slate-800' + labelStyles}>
           {topic}
+        </label>
+        <label title="acceptance rate" className={'text-slate-800' + labelStyles}>
+          {acceptance + '%'}
         </label>
       </div>
       <p>{description}</p>
