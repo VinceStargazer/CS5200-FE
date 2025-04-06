@@ -15,7 +15,7 @@ export default function DescriptionSection({ problem }) {
     expected_output = [],
   } = problem;
   const inputTables = Object.entries(input_data);
-  console.log(problem)
+
   return (
     <>
       <h1 className="text-2xl font-semibold">{problem_id + '. ' + title}</h1>
@@ -88,7 +88,7 @@ const TableSection = ({ tableName, header = [], rows = [] }) => {
             <tr key={index}>
               {row.map((item, i2) => (
                 <td key={i2} className={tdStyles}>
-                  {item}
+                  {typeof item === 'string' ? item : JSON.stringify(item)}
                 </td>
               ))}
             </tr>

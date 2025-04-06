@@ -8,11 +8,11 @@ export const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-export const getHeaders = () => {
+export const getHeaders = (content_type = 'application/json') => {
   const token = localStorage.getItem('access-token');
   return {
     authorization: 'Bearer ' + token,
-    'content-type': 'application/json',
+    'content-type': content_type,
   };
 };
 

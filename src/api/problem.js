@@ -74,3 +74,20 @@ export const getHint = async (prompt) => {
     return { error: error.message || error };
   }
 };
+
+export const uploadProblem = async (formData) => {
+  try {
+    const { data } = await client.post(
+      '/sql-problems/add/',
+      formData,
+      {
+        headers: getHeaders('multipart/form-data'),
+      }
+    );
+    return { data };
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return { error: response.data };
+    return { error: error.message || error };
+  }
+};
