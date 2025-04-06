@@ -84,6 +84,9 @@ export default function Problem() {
                 tabs={tabs}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                prevDisabled={parseInt(problemId) === 1}
+                onPrev={() => navigate(`/problems/${parseInt(problemId) - 1}`)}
+                onNext={() => navigate(`/problems/${parseInt(problemId) + 1}`)}
               />
               {activeTab === 0 && <DescriptionSection problem={problem} />}
               {activeTab === 1 && <CommentsSection problemId={problemId} />}
