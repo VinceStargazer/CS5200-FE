@@ -7,3 +7,6 @@ export { default as HintDialog } from './HintDialog';
 export { default as TabBar } from './TabBar';
 export { default as DescriptionSection } from './DescriptionSection';
 export { default as AttemptsSection } from './AttemptsSection';
+export { default as ProblemList } from './ProblemList';
+export { default as StudentDashboard } from './StudentDashboard';
+export { default as InstructorDashboard } from './InstructorDashboard';

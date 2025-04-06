@@ -10,8 +10,8 @@ import { FaSpinner } from 'react-icons/fa6';
 import { useAuth, useNotification } from '../utils/hooks';
 import { submitProblemAttempt } from '../api/problem';
 
-const buttonSelected = 'text-white font-semibold';
-const buttonUnselected = 'text-slate-200 hover:text-white transition';
+const buttonSelected = 'text-white py-2 font-semibold border-b-2 border-white';
+const buttonUnselected = 'py-2 text-slate-200 hover:text-white transition';
 
 export default function Navbar({
   isProblem,
@@ -80,12 +80,20 @@ export default function Navbar({
 
   return (
     <form className="bg-blue-500" onSubmit={handleSubmit}>
-      <div className="flex justify-between px-4 py-2">
+      <div className="flex justify-between px-4">
         <div className="flex items-center space-x-10">
-          <Link to="/">
+          <Link to={'/'}>
             <button
               type="button"
               className={selected === 0 ? buttonSelected : buttonUnselected}
+            >
+              Dashboard
+            </button>
+          </Link>
+          <Link to="/problems">
+            <button
+              type="button"
+              className={selected === 1 ? buttonSelected : buttonUnselected}
             >
               Problems
             </button>
@@ -93,7 +101,7 @@ export default function Navbar({
           <Link to={isLoggedIn ? '/inbox' : '/login'}>
             <button
               type="button"
-              className={selected === 1 ? buttonSelected : buttonUnselected}
+              className={selected === 2 ? buttonSelected : buttonUnselected}
             >
               Inbox
             </button>
@@ -126,10 +134,10 @@ export default function Navbar({
             </div>
           </div>
         )}
-        <Link to={isLoggedIn ? '/user' : '/login'}>
+        <Link to={isLoggedIn ? '/profile' : '/login'}>
           <button
             type="button"
-            className={selected === 2 ? buttonSelected : buttonUnselected}
+            className={selected === 3 ? buttonSelected : buttonUnselected}
           >
             <FaRegCircleUser size={24} />
           </button>

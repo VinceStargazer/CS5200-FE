@@ -1,9 +1,9 @@
 import { getHeaders } from '../utils/helpers';
 import client from './client';
 
-export const getAllProblems = async () => {
+export const getAllProblems = async (query = '') => {
   try {
-    const { data } = await client('/sql-problems/');
+    const { data } = await client(`/sql-problems/${query}`);
     return { data };
   } catch (error) {
     const { response } = error;

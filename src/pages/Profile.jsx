@@ -9,7 +9,7 @@ import { FaSpinner } from 'react-icons/fa6';
 const buttonStyles =
   'w-64 text-white px-3 py-1 rounded transition flex justify-center';
 
-export default function User() {
+export default function Profile() {
   const { authInfo, handleLogout, handleProfileUpdate } = useAuth();
   const { profile, isLoggedIn } = authInfo;
   const prevProfile = {
@@ -59,7 +59,7 @@ export default function User() {
 
   return (
     <div className="flex flex-col w-full h-screen">
-      <Navbar selected={2} />
+      <Navbar selected={3} />
       <div className="flex justify-center">
         <form
           className="flex flex-col gap-5 p-10 justify-center items-center"
@@ -104,7 +104,9 @@ export default function User() {
               buttonStyles +
               ' bg-green-500  disabled:bg-green-300 hover:bg-green-600'
             }
-            disabled={JSON.stringify(prevProfile) === JSON.stringify(newProfile)}
+            disabled={
+              JSON.stringify(prevProfile) === JSON.stringify(newProfile)
+            }
           >
             {!pending ? (
               <span>Submit Change</span>

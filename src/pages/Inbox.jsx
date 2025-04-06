@@ -15,7 +15,7 @@ export default function Inbox() {
 
   return (
     <>
-      <Navbar selected={1} />
+      <Navbar selected={2} />
       <Container>
         {notifications
           .toSorted((a, b) => b.timestamp.localeCompare(a.timestamp))
