@@ -1,5 +1,6 @@
 const notifications = [
   {
+    id: 1,
     receiver_id: 1,
     content: 'New SQL challenge available!',
     is_read: false,
@@ -7,6 +8,7 @@ const notifications = [
     comment_message: false,
   },
   {
+    id: 2,
     receiver_id: 5,
     content: 'Your attempt on the SQL problem has been graded.',
     is_read: true,
@@ -14,6 +16,7 @@ const notifications = [
     comment_message: true,
   },
   {
+    id: 3,
     receiver_id: 6,
     content: 'Reminder: Complete the database indexing lesson.',
     is_read: false,
@@ -21,6 +24,7 @@ const notifications = [
     comment_message: false,
   },
   {
+    id: 4,
     receiver_id: 3,
     content: 'A new discussion has started in the forum.',
     is_read: false,
@@ -28,6 +32,7 @@ const notifications = [
     comment_message: true,
   },
   {
+    id: 5,
     receiver_id: 2,
     content: 'Your comment received a reply!',
     is_read: true,
@@ -35,6 +40,7 @@ const notifications = [
     comment_message: true,
   },
   {
+    id: 6,
     receiver_id: 5,
     content: 'Your ranking has improved on the leaderboard!',
     is_read: false,
@@ -42,6 +48,7 @@ const notifications = [
     comment_message: false,
   },
   {
+    id: 7,
     receiver_id: 1,
     content: 'You earned a new badge: SQL Master!',
     is_read: true,

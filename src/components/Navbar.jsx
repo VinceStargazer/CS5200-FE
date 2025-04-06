@@ -10,8 +10,8 @@ import { FaSpinner } from 'react-icons/fa6';
 import { useAuth, useNotification } from '../utils/hooks';
 import { submitProblemAttempt } from '../api/problem';
 
-const buttonSelected = 'text-white py-2 font-semibold border-b-2 border-white';
-const buttonUnselected = 'py-2 text-slate-200 hover:text-white transition';
+const buttonSelected = 'text-white py-3 font-semibold border-b-2 border-white';
+const buttonUnselected = 'py-3 text-slate-200 hover:text-white transition border-b-2 border-blue-500';
 
 export default function Navbar({
   isProblem,

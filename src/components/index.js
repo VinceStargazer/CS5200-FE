@@ -10,3 +10,4 @@ export { default as AttemptsSection } from './AttemptsSection';
 export { default as ProblemList } from './ProblemList';
 export { default as StudentDashboard } from './StudentDashboard';
 export { default as InstructorDashboard } from './InstructorDashboard';
+export { default as MessageModal } from './MessageModal';

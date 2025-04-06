@@ -46,6 +46,7 @@ export default function Signup() {
   return (
     <FormContainer onSubmit={handleSubmit}>
       <input
+        required
         className={inputStyle}
         type="text"
         placeholder="Name"
@@ -53,6 +54,7 @@ export default function Signup() {
         onChange={(e) => setUsername(e.target.value)}
       />
       <input
+        required
         className={inputStyle}
         type="email"
         placeholder="Email"
@@ -60,6 +62,7 @@ export default function Signup() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
+        required
         className={inputStyle}
         type="password"
         placeholder="Password"
@@ -67,6 +70,7 @@ export default function Signup() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <input
+        required
         className={inputStyle}
         type="password"
         placeholder="Confirm Password"

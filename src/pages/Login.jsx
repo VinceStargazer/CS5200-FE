@@ -38,6 +38,7 @@ export default function Login() {
   return (
     <FormContainer onSubmit={handleSubmit}>
       <input
+        required
         className={inputStyle}
         type="email"
         placeholder="Email"
@@ -45,6 +46,7 @@ export default function Login() {
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
+        required
         className={inputStyle}
         type="password"
         placeholder="Password"
