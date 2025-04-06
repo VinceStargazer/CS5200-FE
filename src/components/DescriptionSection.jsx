@@ -15,7 +15,7 @@ export default function DescriptionSection({ problem }) {
     expected_output = [],
   } = problem;
   const inputTables = Object.entries(input_data);
-
+  console.log(problem)
   return (
     <>
       <h1 className="text-2xl font-semibold">{problem_id + '. ' + title}</h1>
