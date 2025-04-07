@@ -12,3 +12,4 @@ export { default as StudentDashboard } from './StudentDashboard';
 export { default as InstructorDashboard } from './InstructorDashboard';
 export { default as MessageModal } from './MessageModal';
 export { default as TableBuilder } from './TableBuilder';
+export { default as Card } from './Card';
