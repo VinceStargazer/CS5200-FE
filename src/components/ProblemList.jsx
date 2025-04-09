@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllProblems } from '../api/problem';
 import { useNotification } from '../utils/hooks';
+import Loading from './Loading';
 
 const TOPICS = [
   'Aggregation Functions',
@@ -16,6 +17,7 @@ const TOPICS = [
 const DIFFICULTY_LEVELS = ['Easy', 'Medium', 'Hard'];
 
 export default function ProblemList() {
+  const [loading, setLoading] = useState(true);
   const [problems, setProblems] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
@@ -30,6 +32,7 @@ export default function ProblemList() {
       const queryString = query.length ? `?${query.join('&')}` : '';
 
       const { data, error } = await getAllProblems(queryString);
+      setLoading(false);
       if (error) return updateNotification('error', JSON.stringify(error));
       setProblems(data);
     };
@@ -54,49 +57,53 @@ export default function ProblemList() {
         />
       </div>
 
-      <table className="w-full">
-        <thead>
-          <tr className="text-left">
-            <th className="p-2">ID</th>
-            <th>Title</th>
-            <th>Topic</th>
-            <th>Acceptance</th>
-            <th>Difficulty</th>
-          </tr>
-        </thead>
-        <tbody>
-          {problems.map(
-            (
-              { problem_id, title, topic, difficulty_level, acceptance },
-              index
-            ) => (
-              <tr
-                key={problem_id}
-                className={
-                  (index % 2 === 0 ? 'bg-slate-100' : '') + ' cursor-pointer'
-                }
-                onClick={() => navigate(`/problems/${problem_id}`)}
-              >
-                <td className="p-2 rounded">{problem_id}</td>
-                <td className="hover:text-blue-400 transition">{title}</td>
-                <td>{topic}</td>
-                <td>{Math.round(acceptance * 10) / 10 + '%'}</td>
-                <td
+      {loading ? (
+        <Loading />
+      ) : (
+        <table className="w-full">
+          <thead>
+            <tr className="text-left">
+              <th className="p-2">ID</th>
+              <th>Title</th>
+              <th>Topic</th>
+              <th>Acceptance</th>
+              <th>Difficulty</th>
+            </tr>
+          </thead>
+          <tbody>
+            {problems.map(
+              (
+                { problem_id, title, topic, difficulty_level, acceptance },
+                index
+              ) => (
+                <tr
+                  key={problem_id}
                   className={
-                    difficulty_level === 'Easy'
-                      ? 'text-green-500'
-                      : difficulty_level === 'Medium'
-                      ? 'text-yellow-500'
-                      : 'text-red-500'
+                    (index % 2 === 0 ? 'bg-slate-100' : '') + ' cursor-pointer'
                   }
+                  onClick={() => navigate(`/problems/${problem_id}`)}
                 >
-                  {difficulty_level}
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+                  <td className="p-2 rounded">{problem_id}</td>
+                  <td className="hover:text-blue-400 transition">{title}</td>
+                  <td>{topic}</td>
+                  <td>{Math.round(acceptance * 10) / 10 + '%'}</td>
+                  <td
+                    className={
+                      difficulty_level === 'Easy'
+                        ? 'text-green-500'
+                        : difficulty_level === 'Medium'
+                        ? 'text-yellow-500'
+                        : 'text-red-500'
+                    }
+                  >
+                    {difficulty_level}
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
+      )}
     </>
   );
 }

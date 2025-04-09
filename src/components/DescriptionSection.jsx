@@ -1,5 +1,6 @@
+import TableSection from "./TableSection";
+
 const labelStyles = ' text-xs w-fit bg-slate-100 px-2 py-1 rounded-full';
-const tdStyles = 'text-sm border border-dashed border-slate-300 px-2 py-1';
 const formatColumns = ['Column Name', 'Type', 'Description'];
 
 export default function DescriptionSection({ problem }) {
@@ -43,7 +44,7 @@ export default function DescriptionSection({ problem }) {
       {tables?.map(({ table_name, columns }) => (
         <TableSection
           key={table_name}
-          tableName={'Table: ' + table_name}
+          tableName={'Schema: ' + table_name}
           header={formatColumns}
           rows={columns?.map(({ name, type, description = '' }) => [
             name,
@@ -68,33 +69,3 @@ export default function DescriptionSection({ problem }) {
     </>
   );
 }
-
-const TableSection = ({ tableName, header = [], rows = [] }) => {
-  return (
-    <div className="flex flex-col gap-2" key={tableName}>
-      <span className="font-semibold">{tableName}</span>
-      <table className="text-left">
-        <thead>
-          <tr>
-            {header.map((item) => (
-              <th key={item} className={tdStyles}>
-                {item}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, index) => (
-            <tr key={index}>
-              {row.map((item, i2) => (
-                <td key={i2} className={tdStyles}>
-                  {typeof item === 'string' ? item : JSON.stringify(item)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};

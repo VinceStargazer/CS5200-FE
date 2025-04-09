@@ -8,6 +8,8 @@ import {
   DescriptionSection,
   TabBar,
   AttemptsSection,
+  Section,
+  SQLEditor,
 } from '../components';
 import { getSingleProblem } from '../api/problem';
 import { useNotification } from '../utils/hooks';
@@ -31,9 +33,9 @@ export default function Problem() {
   const navigate = useNavigate();
   const { updateNotification } = useNotification();
 
-  const handleChange = ({ target }) => {
-    setSolution(target.value);
-    debouncedSave(target.value);
+  const handleChange = (code) => {
+    setSolution(code);
+    debouncedSave(code);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,7 +77,7 @@ export default function Problem() {
         hintsStep={hintStep}
       />
       <div className="flex flex-grow">
-        <Section className="ml-2 mr-1">
+        <Section className="w-1/2 ml-2 mr-1">
           {!ready ? (
             <Loading />
           ) : (
@@ -95,13 +97,8 @@ export default function Problem() {
           )}
         </Section>
 
-        <Section className="ml-1 mr-2">
-          <textarea
-            className="flex-1 focus:outline-none"
-            placeholder="Type something..."
-            onChange={handleChange}
-            value={solution}
-          />
+        <Section className="w-1/2 ml-1 mr-2">
+          <SQLEditor value={solution} onValueChange={handleChange} />
           <button
             onClick={() => setShowDialog(true)}
             className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg hover:bg-blue-600 transition"
@@ -125,16 +122,3 @@ export default function Problem() {
     </div>
   );
 }
-
-const Section = ({ children, className }) => {
-  return (
-    <div
-      className={
-        className +
-        ' w-1/2 flex flex-col gap-4 my-2 p-5 rounded bg-white overflow-y-auto h-[calc(100vh-4rem)]'
-      }
-    >
-      {children}
-    </div>
-  );
-};

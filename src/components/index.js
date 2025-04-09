@@ -13,3 +13,7 @@ export { default as InstructorDashboard } from './InstructorDashboard';
 export { default as MessageModal } from './MessageModal';
 export { default as TableBuilder } from './TableBuilder';
 export { default as Card } from './Card';
+export { default as Section } from './Section';
+export { default as TableSection } from './TableSection';
+export { default as Button } from './Button';
+export { default as SQLEditor } from './SQLEditor';

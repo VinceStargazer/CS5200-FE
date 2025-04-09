@@ -1,3 +1,5 @@
+import { marked } from 'marked';
+
 export const trim = (string, limit = 100) => {
   if (string.length <= limit) return string;
   return string.substring(0, limit) + '...';
@@ -62,4 +64,9 @@ export const generatePromptFromProblem = (problem, hintResponses, hintStep) => {
   }
 
   return prompt.trim();
+};
+
+export const markdownToPlainText = (markdown) => {
+  const html = marked(markdown);
+  return html.replace(/<[^>]*>/g, '').trim();
 };
