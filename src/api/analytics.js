@@ -30,3 +30,20 @@ export const submitSqlQuery = async (query) => {
     return { error: error.message || error };
   }
 };
+
+export const getQueryFromLLM = async (prompt) => {
+  try {
+    const { data } = await client.post(
+      '/llm-analytics/generate/',
+      { prompt },
+      {
+        headers: getHeaders(),
+      }
+    );
+    return { data };
+  } catch (error) {
+    const { response } = error;
+    if (response?.data) return { error: response.data };
+    return { error: error.message || error };
+  }
+};

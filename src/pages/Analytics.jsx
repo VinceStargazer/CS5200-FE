@@ -11,7 +11,11 @@ import {
 import { useAuth, useNotification } from '../utils/hooks';
 import { marked } from 'marked';
 import { markdownToPlainText } from '../utils/helpers';
-import { getAllowedSchemas, submitSqlQuery } from '../api/analytics';
+import {
+  getAllowedSchemas,
+  getQueryFromLLM,
+  submitSqlQuery,
+} from '../api/analytics';
 
 const headerStyles = 'text-2xl font-semibold';
 const formatColumns = ['Column Name', 'Type'];
@@ -20,9 +24,7 @@ export default function Analytics() {
   const [schemas, setSchemas] = useState({});
   const [sqlQuery, setSqlQuery] = useState('');
   const [questionInput, setQuestionInput] = useState('');
-  const [questionResponse, setQuestionResponse] = useState(
-    '```sql\nSELECT user_id FROM Attempt\nWHERE problem_id = 3;\n```'
-  );
+  const [questionResponse, setQuestionResponse] = useState('');
   const [queryResponse, setQueryResponse] = useState({ columns: [], rows: [] });
   const [loading, setLoading] = useState(true);
   const [queryPending, setQueryPending] = useState(false);
@@ -66,8 +68,10 @@ export default function Analytics() {
 
   const handleSendQuestion = async () => {
     setQuestionPending(true);
-    // TO DO
+    const { data, error } = await getQueryFromLLM(questionInput);
     setQuestionPending(false);
+    if (error) return updateNotification('error', JSON.stringify(error));
+    setQuestionResponse(data.query);
   };
 
   return (
@@ -75,7 +79,7 @@ export default function Analytics() {
       <Navbar />
       <div className="flex flex-grow">
         <Section className="w-1/3 ml-2 mr-1">
-          <h1 className={headerStyles}>Allowed Columns</h1>
+          <h1 className={headerStyles}>Schema Description</h1>
           {loading ? (
             <Loading />
           ) : (
@@ -95,7 +99,10 @@ export default function Analytics() {
         <Section className="w-1/3 ml-1 mr-1">
           <h1 className={headerStyles}>Format Your Query</h1>
           <div className="flex flex-col gap-3 mb-3">
-            <SQLEditor value={sqlQuery} onValueChange={code => setSqlQuery(code)} />
+            <SQLEditor
+              value={sqlQuery}
+              onValueChange={(code) => setSqlQuery(code)}
+            />
             <Button
               disabled={queryPending || !sqlQuery.trim()}
               className="bg-blue-500 hover:bg-blue-600"
@@ -108,7 +115,7 @@ export default function Analytics() {
           <div className="flex flex-col gap-3">
             <p>Or generate query from AI:</p>
             {questionResponse && (
-              <div className="relative w-full px-4 py-2 bg-gray-50 rounded-md border border-gray-300">
+              <div className="relative min-w-full w-fit px-4 py-2 bg-gray-50 rounded-md border border-gray-300">
                 <button
                   className="absolute top-2 right-2 text-sm text-blue-600 hover:underline"
                   onClick={() =>
@@ -128,15 +135,23 @@ export default function Analytics() {
               rows={2}
               className="w-full h-16 border rounded px-2 py-1"
               placeholder="Type your question..."
-              onKeyDown={handleSendQuestion}
             />
-            <Button
-              disabled={questionPending || !questionInput.trim()}
-              className="bg-green-500 hover:bg-green-600"
-              onClick={handleSendQuestion}
-              pending={questionPending}
-              text="Send"
-            />
+            <div className="flex gap-5">
+              <Button
+                disabled={questionPending || !questionInput.trim()}
+                className="bg-green-500 hover:bg-green-600"
+                onClick={handleSendQuestion}
+                pending={questionPending}
+                text="Send"
+              />
+              <Button
+                disabled={!questionInput.trim()}
+                className="bg-red-500 hover:bg-red-600"
+                onClick={() => setQuestionInput('')}
+                text="Clear"
+                pending={false}
+              />
+            </div>
           </div>
         </Section>
 
