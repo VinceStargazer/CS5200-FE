@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Info } from 'lucide-react';
 import {
   Button,
   Loading,
@@ -17,7 +18,7 @@ import {
   submitSqlQuery,
 } from '../api/analytics';
 
-const headerStyles = 'text-2xl font-semibold';
+const headerStyles = 'text-xl font-semibold';
 const formatColumns = ['Column Name', 'Type'];
 
 export default function Analytics() {
@@ -81,9 +82,15 @@ export default function Analytics() {
         <Section className="w-1/3 ml-2 mr-1">
           <h1 className={headerStyles}>Feature Overview</h1>
           <p className="text-sm text-gray-700 mb-4">
-            Welcome to the <strong>Student Performance Analytics Tool</strong>! This interface allows instructors to run flexible SQL queries to analyze student performance, track problem completion, and gain insights to support data-driven teaching decisions.
+            Welcome to the <strong>Student Performance Analytics Tool</strong>!
+            This interface allows instructors to run flexible SQL queries to
+            analyze student performance, track problem completion, and gain
+            insights to support data-driven teaching decisions.
           </p>
-          <h1 className={headerStyles}>Schema Description</h1>
+          <Header
+            title="Schema Description"
+            description="This section lists all available database schemas. Each schema contains tables and columns you can use in your SQL queries to analyze student data."
+          />
           {loading ? (
             <Loading />
           ) : (
@@ -101,13 +108,10 @@ export default function Analytics() {
         </Section>
 
         <Section className="w-1/3 ml-1 mr-1">
-          <h1 className={headerStyles}>How to Use</h1>
-          <ul className="text-sm text-gray-700 list-disc list-inside mb-4">
-            <strong>Use Natural Language:</strong> Type a question like “How many students have never completed any problems” and click “Send.”
-              <p></p>
-            <strong>Run a Quick Query:</strong> Copy the query generated from AI, click the “Execute” button to view top-performing students.
-          </ul>
-          <h1 className={headerStyles}>Format Your Query</h1>
+          <Header
+            title="Write Custom SQL Query"
+            description="Write your custom SQL query here to analyze student data. Use the schema on the left section as a reference for table and column names."
+          />
           <div className="flex flex-col gap-3 mb-3">
             <SQLEditor
               value={sqlQuery}
@@ -123,7 +127,10 @@ export default function Analytics() {
           </div>
 
           <div className="flex flex-col gap-3">
-            <p>Or generate query from AI:</p>
+            <Header
+              title="Generate Query From AI"
+              description="Ask a question in plain English, such as 'How many students have never completed any problems', and the AI will generate a matching SQL query for you. You can review and copy the result before running it."
+            />
             {questionResponse && (
               <div className="relative min-w-full w-fit px-4 py-2 bg-gray-50 rounded-md border border-gray-300">
                 <button
@@ -166,7 +173,10 @@ export default function Analytics() {
         </Section>
 
         <Section className="w-1/3 ml-1 mr-2">
-          <h1 className={headerStyles}>Query Output</h1>
+          <Header
+            title="Query Output"
+            description="Displays the result of your most recent query."
+          />
           <TableSection
             tableName="Output Table"
             header={queryResponse.columns}
@@ -177,3 +187,17 @@ export default function Analytics() {
     </div>
   );
 }
+
+const Header = ({ title, description }) => {
+  return (
+    <div className="flex gap-2 items-center">
+      <h1 className="text-xl font-semibold">{title}</h1>
+      <div className="mt-1 relative group">
+        <Info className="w-4 h-4 text-gray-500 cursor-pointer" />
+        <div className="absolute left-6 top-1/2 transform -translate-y-1/2 z-10 hidden group-hover:block w-64 p-2 bg-white border border-gray-300 rounded-md shadow-lg text-sm text-gray-700">
+          {description}
+        </div>
+      </div>
+    </div>
+  );
+};

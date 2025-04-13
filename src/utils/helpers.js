@@ -68,5 +68,8 @@ export const generatePromptFromProblem = (problem, hintResponses, hintStep) => {
 
 export const markdownToPlainText = (markdown) => {
   const html = marked(markdown);
-  return html.replace(/<[^>]*>/g, '').trim();
+  const text = html.replace(/<[^>]*>/g, '').trim();
+  const textarea = document.createElement('textarea');
+  textarea.innerHTML = text;
+  return textarea.value;
 };
