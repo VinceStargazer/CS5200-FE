@@ -79,6 +79,10 @@ export default function Analytics() {
       <Navbar />
       <div className="flex flex-grow">
         <Section className="w-1/3 ml-2 mr-1">
+          <h1 className={headerStyles}>Feature Overview</h1>
+          <p className="text-sm text-gray-700 mb-4">
+            Welcome to the <strong>Student Performance Analytics Tool</strong>! This interface allows instructors to run flexible SQL queries to analyze student performance, track problem completion, and gain insights to support data-driven teaching decisions.
+          </p>
           <h1 className={headerStyles}>Schema Description</h1>
           {loading ? (
             <Loading />
@@ -97,6 +101,12 @@ export default function Analytics() {
         </Section>
 
         <Section className="w-1/3 ml-1 mr-1">
+          <h1 className={headerStyles}>How to Use</h1>
+          <ul className="text-sm text-gray-700 list-disc list-inside mb-4">
+            <strong>Use Natural Language:</strong> Type a question like “How many students have never completed any problems” and click “Send.”
+              <p></p>
+            <strong>Run a Quick Query:</strong> Copy the query generated from AI, click the “Execute” button to view top-performing students.
+          </ul>
           <h1 className={headerStyles}>Format Your Query</h1>
           <div className="flex flex-col gap-3 mb-3">
             <SQLEditor
